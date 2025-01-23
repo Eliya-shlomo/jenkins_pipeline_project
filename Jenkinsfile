@@ -3,20 +3,49 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
+                echo 'Checking out code...'
                 checkout scm
-                echo 'Code checkout completed!'
             }
         }
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                sh 'echo "Build process executed."'
+                sh 'npm install || exit 1' // Exit with error if npm is not found
+            }
+        }
+        stage('Test') {
+            when {
+                not {
+                    failed()
+                }
+            }
+            steps {
+                echo 'Running tests...'
+                sh 'npm test'
+            }
+        }
+        stage('Deploy') {
+            when {
+                not {
+                    failed()
+                }
+            }
+            steps {
+                echo 'Deploying the application...'
+                sh './deploy.sh'
             }
         }
     }
     post {
         always {
-            echo 'Pipeline execution completed!'
+            echo 'Cleaning up workspace...'
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check logs.'
         }
     }
 }
