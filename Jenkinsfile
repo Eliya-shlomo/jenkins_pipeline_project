@@ -10,14 +10,12 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                sh 'npm install || exit 1' // Exit with error if npm is not found
+                sh 'npm install || exit 1' // Exit with error if npm fails
             }
         }
         stage('Test') {
             when {
-                not {
-                    failed()
-                }
+                expression { currentBuild.result != 'FAILURE' } // Skip if the build failed
             }
             steps {
                 echo 'Running tests...'
@@ -26,9 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             when {
-                not {
-                    failed()
-                }
+                expression { currentBuild.result != 'FAILURE' } // Skip if the build failed
             }
             steps {
                 echo 'Deploying the application...'
