@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                // Example build command for a Node.js project
+                // Example build command for a Node.js project.
                 sh 'npm install'
             }
         }
