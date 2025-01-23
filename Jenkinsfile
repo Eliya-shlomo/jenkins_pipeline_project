@@ -1,15 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Hello World') {
+        stage('Check Node') {
             steps {
-                echo 'Hello, World! its me eliya!'
+                script {
+                    echo "This pipeline is running on node: ${env.NODE_NAME}"
+                }
             }
-        }
-    }
-    post {
-        always {
-            echo 'Pipeline execution completed!'
         }
     }
 }
